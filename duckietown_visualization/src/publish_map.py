@@ -19,12 +19,10 @@ if __name__ == '__main__':
     map_name = rospy.get_param('~map_name')
 
     m = dw.load_map(map_name)
-    tile_size = m.tile_size
-    known_types = get_list_of_supported_types()
+    
+    rospy.loginfo("Map %s loaded", map_name)
 
-    rospy.loginfo("Map %s loaded with tile size %f", map_name, tile_size)
-
-    marker_array = get_marker_array_from_map(m,tile_size,known_types)
+    marker_array = get_marker_array_from_map(m)
     rospy.loginfo("Marker array created. Now publishing!")
 
     while not rospy.is_shutdown():
