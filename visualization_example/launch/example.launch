@@ -22,6 +22,6 @@
     <node pkg="tf"
         type="static_transform_publisher"
         name="map_to_duckiebot_link_broadcaster"
-        args="1 1 0 0 0 0 map duckiebot_link 100" />
+        args="1 1 0 0 0 0 map duckiebot_link 10" />
 
 </launch>

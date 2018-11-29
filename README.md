@@ -3,12 +3,13 @@ This is a ROS package for visualization of Duckietown maps and duckiebots.
 
 ## Features
 - [x] Visualization of maps from duckietown-world
+- [x] Realtime visualization of duckiebots
 - [ ] Visualization of road signs and watchtowers
-- [ ] Realtime visualization of duckiebots
 
 ## Prerequisites
 - Desktop-Full installation of ROS
 - [duckietown-world](https://github.com/duckietown/duckietown-world)
+- [geometry](https://github.com/AndreaCensi/geometry)
 
 ## Installing
 From the `src` directory of your ROS Workspace, run
@@ -58,3 +59,19 @@ for each element of the map. Each class of elements (tiles, road signs, etc.) is
 published in a different namespace under the transform `/map` to provide the 
 feature of turning off a certain category of map elements.
 
+## Using duckietown_visualization with your pipeline
+Go through the example code in the package `visualization_example` to understand
+how to use `duckietown_visualization`.
+
+- First, create a list of duckiebot names which you want to visualize in a yaml 
+file similar to `visualization_example/config/example.yaml`
+- For each duckiebot, publish a transform from frame `duckiebot_link` to that 
+duckiebot. `duckiebot_link` is a fixed frame which is the origin of your 
+measurements for each duckiebot.
+- It may so happen that your coordinate system does not match with the 
+`duckietown-world` coordinate system, which has the origin on the bottom left. 
+You can account for this by publishing a static transform between frame `map` 
+and frame `duckiebot_link`. An example is present in 
+`visualization_example/launch/example.launch`. Note that if your coordinate 
+frame aligns with the `map` frame, you would still need to broadcast a transform
+, which in this case would be an identity transform.
