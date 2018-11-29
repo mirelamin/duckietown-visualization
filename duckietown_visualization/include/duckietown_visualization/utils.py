@@ -22,7 +22,7 @@ def get_tile_marker(x, y, angle, marker_type, marker_id, tile_size):
 
     marker.pose.position.x = x 
     marker.pose.position.y = y
-    marker.pose.position.z = - 0.1
+    marker.pose.position.z = -0.06
 
     marker.scale.x = tile_size
     marker.scale.y = tile_size
@@ -40,9 +40,9 @@ def get_tile_marker(x, y, angle, marker_type, marker_id, tile_size):
     marker.pose.orientation.z = q[2]
     marker.pose.orientation.w = q[3]
 
-    if marker_type == "curve_left" or marker_type == "curve_right":
-        marker.scale.x = tile_size * 1.025  # looks better
-        marker.scale.y = tile_size * 1.025
+    #if marker_type == "curve_left" or marker_type == "curve_right":
+    #    marker.scale.x = tile_size * 1.025  # looks better
+    #    marker.scale.y = tile_size * 1.025
 
     return marker
 
