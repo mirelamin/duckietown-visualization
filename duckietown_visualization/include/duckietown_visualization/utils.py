@@ -22,7 +22,7 @@ def get_tile_marker(x, y, angle, marker_type, marker_id, tile_size):
 
     marker.pose.position.x = x 
     marker.pose.position.y = y
-    marker.pose.position.z = -0.06
+    marker.pose.position.z = -0.05
 
     marker.scale.x = tile_size
     marker.scale.y = tile_size

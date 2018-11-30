@@ -49,7 +49,7 @@ if __name__ == '__main__':
             y = center[it][1] + radius[it]*math.sin(theta)
 
             transform_broadcaster.sendTransform((x, y, 0), \
-                tf.transformations.quaternion_from_euler(0, 0, theta), \
+                tf.transformations.quaternion_from_euler(0, 0, theta+math.pi/2), \
                 t, duckiebot_list[it], "duckiebot_link")
 
         rate.sleep()
