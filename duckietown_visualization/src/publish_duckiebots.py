@@ -61,7 +61,6 @@ if __name__ == '__main__':
 
     listener = tf.TransformListener()
 
-    duckiebot_list = rospy.get_param('~duckiebot_list')
     pub = rospy.Publisher('duckiebots_markers', MarkerArray, queue_size=10)
 
     rate = rospy.Rate(10.0)

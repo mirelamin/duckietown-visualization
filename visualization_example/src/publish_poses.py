@@ -23,7 +23,6 @@ if __name__ == '__main__':
 
     rate = rospy.Rate(10)  # 10hz
 
-    duckiebot_list = rospy.get_param('~duckiebot_list')
     transform_broadcaster = tf.TransformBroadcaster()
     rospy.Subscriber('/flock_simulator/state', FlockState, callback)
 
