@@ -8,7 +8,7 @@
 
     <include 
     file="$(find duckietown_visualization)/launch/publish_map.launch">
-        <arg name="map_name" value="robotarium1"/>
+        <arg name="map_name" value="4way"/>
         <arg name="rviz_config" 
             value="$(find visualization_example)/config/myconfig.rviz"/>
     </include>
@@ -22,6 +22,6 @@
     <node pkg="tf"
         type="static_transform_publisher"
         name="map_to_duckiebot_link_broadcaster"
-        args="1 1 0 0 0 0 map duckiebot_link 10" />
+        args="0 0 0 0 0 0 map duckiebot_link 10" />
 
 </launch>

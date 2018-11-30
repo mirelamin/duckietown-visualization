@@ -12,9 +12,11 @@
   
   <build_depend>rospy</build_depend>
   <build_depend>tf</build_depend>
+  <build_depend>flock_simulator</build_depend>
   
   <exec_depend>rospy</exec_depend>
   <exec_depend>tf</exec_depend>
+  <exec_depend>flock_simulator</exec_depend>
   
   <export>
   </export>
