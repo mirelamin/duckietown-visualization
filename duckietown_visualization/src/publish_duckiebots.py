@@ -32,21 +32,18 @@ def get_marker(marker_id, x, y, q):
     marker.id = marker_id
     marker.ns = "duckiebots"
 
-    marker.type = marker.CUBE
+    marker.type = marker.MESH_RESOURCE
     marker.action = marker.ADD
+    marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot.dae"
+    marker.mesh_use_embedded_materials = True
 
     marker.pose.position.x = x
     marker.pose.position.y = y
     marker.pose.position.z = 0
 
-    marker.scale.x = 0.2
-    marker.scale.y = 0.1
-    marker.scale.z = 0.1
-
-    marker.color.r = 1
-    marker.color.g = 1
-    marker.color.b = 0
-    marker.color.a = 1
+    marker.scale.x = 1
+    marker.scale.y = 1
+    marker.scale.z = 1
 
     marker.pose.orientation.x = q[0]
     marker.pose.orientation.y = q[1]
