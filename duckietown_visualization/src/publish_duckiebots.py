@@ -60,7 +60,6 @@ if __name__ == '__main__':
 
     pub = rospy.Publisher('duckiebots_markers', MarkerArray, queue_size=10)
 
-    rate = rospy.Rate(10.0)
     rospy.Subscriber('/flock_simulator/state', FlockState, callback)
 
     rospy.spin()
