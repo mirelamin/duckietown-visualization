@@ -34,7 +34,7 @@ def get_marker(marker_id, x, y, q):
 
     marker.type = marker.MESH_RESOURCE
     marker.action = marker.ADD
-    marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot.dae"
+    marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot.dae"
     marker.mesh_use_embedded_materials = True
 
     marker.pose.position.x = x
