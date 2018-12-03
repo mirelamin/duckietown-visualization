@@ -4,7 +4,6 @@ project(visualization_example)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   tf
-  flock_simulator
 )
 
 catkin_package()
