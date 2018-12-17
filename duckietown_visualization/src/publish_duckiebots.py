@@ -6,11 +6,11 @@ from visualization_msgs.msg import Marker, MarkerArray
 from flock_simulator.msg import FlockState
 
 
-def callback(bots):
+def callback(state):
     marker_array = MarkerArray()
     counter = 0
 
-    for it in bots.duckie_states:
+    for it in state.duckie_states:
         duckie_id = it.duckie_id.data
         try:
             (trans,rot) = listener.lookupTransform('/duckiebot_link', \
@@ -19,13 +19,72 @@ def callback(bots):
                 tf.ExtrapolationException):
             continue
         marker_array.markers.append(
-            get_marker(counter, trans[0], trans[1], rot))
+            get_duckiebot_marker(counter, trans[0], trans[1], rot))
         counter += 1
+
+    request_counter = 0
+    for _ in state.requests:
+        request_start_id = 'request-start-%d' % request_counter
+        request_end_id = 'request-end-%d' % request_counter
+        try:
+            (trans_start,rot_start) = listener.lookupTransform('/request_link', \
+                request_start_id, rospy.Time(0))
+            (trans_end,rot_end) = listener.lookupTransform('/request_link', \
+                request_end_id, rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException,
+                tf.ExtrapolationException):
+            continue
+        marker_array.markers.append(
+            get_request_marker(counter, trans_start[0], trans_start[1],
+                               rot_start, True))
+        counter += 1
+        marker_array.markers.append(
+            get_request_marker(counter, trans_end[0], trans_end[1], rot_end,
+                               False))
+        counter += 1
+        request_counter += 1
 
     pub.publish(marker_array)
 
 
-def get_marker(marker_id, x, y, q):
+def get_request_marker(marker_id, x, y, q, isStart):
+    marker = Marker()
+
+    marker.header.frame_id = "/request_link"
+    marker.id = marker_id
+    marker.ns = "duckiebots"
+
+    marker.type = marker.SPHERE
+    marker.action = marker.ADD
+
+    marker.pose.position.x = x
+    marker.pose.position.y = y
+    marker.pose.position.z = 0.05
+
+    marker.scale.x = 0.1
+    marker.scale.y = 0.1
+    marker.scale.z = 0.1
+
+    marker.pose.orientation.x = q[0]
+    marker.pose.orientation.y = q[1]
+    marker.pose.orientation.z = q[2]
+    marker.pose.orientation.w = q[3]
+
+    if isStart:
+        marker.color.r = 0.0
+        marker.color.g = 0.0
+        marker.color.b = 1.0
+        marker.color.a = 1.0
+    else:
+        marker.color.r = 0.0
+        marker.color.g = 1.0
+        marker.color.b = 0.0
+        marker.color.a = 1.0
+
+    return marker
+
+
+def get_duckiebot_marker(marker_id, x, y, q):
     marker = Marker()
 
     marker.header.frame_id = "/duckiebot_link"
