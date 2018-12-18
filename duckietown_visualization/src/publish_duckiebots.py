@@ -22,10 +22,9 @@ def callback(state):
             get_duckiebot_marker(counter, trans[0], trans[1], rot))
         counter += 1
 
-    request_counter = 0
-    for _ in state.requests:
-        request_start_id = 'request-start-%d' % request_counter
-        request_end_id = 'request-end-%d' % request_counter
+    for request in state.requests:
+        request_start_id = '%s-start' % request.request_id.data
+        request_end_id = '%s-end' % request.request_id.data
         try:
             (trans_start,rot_start) = listener.lookupTransform('/request_link', \
                 request_start_id, rospy.Time(0))
@@ -42,7 +41,6 @@ def callback(state):
             get_request_marker(counter, trans_end[0], trans_end[1], rot_end,
                                False))
         counter += 1
-        request_counter += 1
 
     pub.publish(marker_array)
 
