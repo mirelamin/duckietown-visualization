@@ -4,7 +4,7 @@ This is a ROS package for visualization of Duckietown maps and duckiebots.
 ## Features
 - [x] Visualization of maps from duckietown-world
 - [x] Realtime visualization of duckiebots
-- [ ] Visualization of road signs and watchtowers
+- [x] Visualization of road signs
 
 ## Prerequisites
 - Desktop-Full installation of ROS
@@ -14,7 +14,7 @@ This is a ROS package for visualization of Duckietown maps and duckiebots.
 ## Installing
 From the `src` directory of your ROS Workspace, run
 ```
-$ git clone https://github.com/surirohit/duckietown-visualization
+$ git clone https://github.com/duckietown/duckietown-visualization
 ```
 From your workspace directory, run
 ```
