@@ -13,8 +13,8 @@ def callback(state):
     for it in state.duckie_states:
         duckie_id = it.duckie_id.data
         try:
-            (trans,rot) = listener.lookupTransform('/duckiebot_link', \
-                duckie_id, rospy.Time(0))
+            (trans, rot) = listener.lookupTransform('/duckiebot_link',
+                                                    duckie_id, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException,
                 tf.ExtrapolationException):
             continue
@@ -23,24 +23,29 @@ def callback(state):
         counter += 1
 
     for request in state.requests:
-        request_start_id = '%s-start' % request.request_id.data
-        request_end_id = '%s-end' % request.request_id.data
-        try:
-            (trans_start,rot_start) = listener.lookupTransform('/request_link', \
-                request_start_id, rospy.Time(0))
-            (trans_end,rot_end) = listener.lookupTransform('/request_link', \
-                request_end_id, rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException,
-                tf.ExtrapolationException):
-            continue
-        marker_array.markers.append(
-            get_request_marker(counter, trans_start[0], trans_start[1],
-                               rot_start, True))
-        counter += 1
-        marker_array.markers.append(
-            get_request_marker(counter, trans_end[0], trans_end[1], rot_end,
-                               False))
-        counter += 1
+        request_id = '%s' % request.request_id.data
+        if not request.duckie_id.data:
+            try:
+                (trans_start, rot_start) = listener.lookupTransform(
+                    '/request_link', request_id, rospy.Time(0))
+            except (tf.LookupException, tf.ConnectivityException,
+                    tf.ExtrapolationException):
+                continue
+            marker_array.markers.append(
+                get_request_marker(counter, trans_start[0], trans_start[1],
+                                   rot_start, True))
+            counter += 1
+        else:
+            try:
+                (trans_end, rot_end) = listener.lookupTransform(
+                    '/request_link', request_id, rospy.Time(0))
+            except (tf.LookupException, tf.ConnectivityException,
+                    tf.ExtrapolationException):
+                continue
+            marker_array.markers.append(
+                get_request_marker(counter, trans_end[0], trans_end[1],
+                                   rot_end, False))
+            counter += 1
 
     pub.publish(marker_array)
 
@@ -113,7 +118,8 @@ def get_duckiebot_marker(marker_id, x, y, q):
 if __name__ == '__main__':
     rospy.init_node('duckiebot_marker_publisher')
 
-    listener = tf.TransformListener()
+    tfCacheDuration = rospy.Duration.from_sec(0.1)
+    listener = tf.TransformListener(tfCacheDuration)
 
     pub = rospy.Publisher('duckiebots_markers', MarkerArray, queue_size=10)
 
