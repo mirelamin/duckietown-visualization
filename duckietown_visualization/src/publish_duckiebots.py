@@ -74,9 +74,9 @@ def get_request_marker(marker_id, x, y, q, isStart):
     marker.pose.orientation.w = q[3]
 
     if isStart:
-        marker.color.r = 0.0
-        marker.color.g = 0.0
-        marker.color.b = 1.0
+        marker.color.r = 1.0
+        marker.color.g = 1.0
+        marker.color.b = 0.0
         marker.color.a = 1.0
     else:
         marker.color.r = 0.0
