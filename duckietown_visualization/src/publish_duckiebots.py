@@ -19,7 +19,8 @@ def callback(state):
                 tf.ExtrapolationException):
             continue
         marker_array.markers.append(
-            get_duckiebot_marker(counter, trans[0], trans[1], rot))
+            get_duckiebot_marker(counter, it.status.data, trans[0], trans[1],
+                                 rot))
         counter += 1
 
     for request in state.requests:
@@ -93,7 +94,7 @@ def get_request_marker(marker_id, x, y, q, is_start):
     return marker
 
 
-def get_duckiebot_marker(marker_id, x, y, q):
+def get_duckiebot_marker(marker_id, status, x, y, q):
     marker = Marker()
 
     marker.header.frame_id = "/duckiebot_link"
@@ -102,8 +103,14 @@ def get_duckiebot_marker(marker_id, x, y, q):
 
     marker.type = marker.MESH_RESOURCE
     marker.action = marker.ADD
-    marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot.dae"
     marker.mesh_use_embedded_materials = True
+    marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot_blue.dae"
+    if status == 'REBALANCING':
+        marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot_green.dae"
+    elif status == 'DRIVINGTOCUSTOMER':
+        marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot_yellow.dae"
+    elif status == 'DRIVINGWITHCUSTOMER':
+        marker.mesh_resource = "package://duckietown_visualization/meshes/duckiebot/duckiebot_orange.dae"
 
     marker.pose.position.x = x
     marker.pose.position.y = y
