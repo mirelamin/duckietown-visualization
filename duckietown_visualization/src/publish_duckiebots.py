@@ -24,33 +24,39 @@ def callback(state):
 
     for request in state.requests:
         request_id = '%s' % request.request_id.data
-        if not request.duckie_id.data:
-            try:
-                (trans_start, rot_start) = listener.lookupTransform(
-                    '/request_link', request_id, rospy.Time(0))
-            except (tf.LookupException, tf.ConnectivityException,
-                    tf.ExtrapolationException):
-                continue
-            marker_array.markers.append(
-                get_request_marker(counter, trans_start[0], trans_start[1],
-                                   rot_start, True))
-            counter += 1
-        else:
-            try:
-                (trans_end, rot_end) = listener.lookupTransform(
-                    '/request_link', request_id, rospy.Time(0))
-            except (tf.LookupException, tf.ConnectivityException,
-                    tf.ExtrapolationException):
-                continue
-            marker_array.markers.append(
-                get_request_marker(counter, trans_end[0], trans_end[1],
-                                   rot_end, False))
-            counter += 1
+        is_start = False if request.duckie_id.data else True
+        try:
+            (trans_mark, rot_mark) = listener.lookupTransform(
+                '/request_link', request_id, rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException,
+                tf.ExtrapolationException):
+            continue
+        marker_array.markers.append(
+            get_request_marker(counter, trans_mark[0], trans_mark[1], rot_mark,
+                               is_start))
+        counter += 1
+
+        if request_id not in previous_marker_ids:
+            previous_marker_ids.append(request_id)
+
+    for _ in previous_marker_ids:
+        marker_array.markers.append(get_empty_marker(counter))
+        counter += 1
 
     pub.publish(marker_array)
 
 
-def get_request_marker(marker_id, x, y, q, isStart):
+def get_empty_marker(marker_id):
+    marker = Marker()
+
+    marker.header.frame_id = "/request_link"
+    marker.id = marker_id
+    marker.ns = "duckiebots"
+
+    return marker
+
+
+def get_request_marker(marker_id, x, y, q, is_start):
     marker = Marker()
 
     marker.header.frame_id = "/request_link"
@@ -73,7 +79,7 @@ def get_request_marker(marker_id, x, y, q, isStart):
     marker.pose.orientation.z = q[2]
     marker.pose.orientation.w = q[3]
 
-    if isStart:
+    if is_start:
         marker.color.r = 1.0
         marker.color.g = 1.0
         marker.color.b = 0.0
@@ -118,10 +124,11 @@ def get_duckiebot_marker(marker_id, x, y, q):
 if __name__ == '__main__':
     rospy.init_node('duckiebot_marker_publisher')
 
-    tfCacheDuration = rospy.Duration.from_sec(0.1)
-    listener = tf.TransformListener(tfCacheDuration)
+    listener = tf.TransformListener()
 
     pub = rospy.Publisher('duckiebots_markers', MarkerArray, queue_size=10)
+
+    previous_marker_ids = []
 
     rospy.Subscriber('/flock_simulator/state', FlockState, callback)
 
